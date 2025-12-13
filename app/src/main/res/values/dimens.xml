@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="screen_padding">16dp</dimen>
+    <dimen name="button_corner_radius">16dp</dimen>
+    <dimen name="button_icon_padding">12dp</dimen>
+    <dimen name="button_spacing">16dp</dimen>
+    <dimen name="settings_icon_size">24dp</dimen>
+    <dimen name="title_text_size">24sp</dimen>
+    <dimen name="settings_title_text_size">20sp</dimen>
+</resources>
+
