@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/settings_background_light">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -13,59 +13,42 @@
         android:minHeight="56dp"
         app:title="@string/settings_title"
         app:titleTextAppearance="@style/ToolbarTitle"
-        app:titleTextColor="@color/yp_black"
+        app:titleTextColor="@color/toolbar_title_settings_light"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:navigationIconTint="@color/yp_black" />
+        app:navigationIconTint="@color/toolbar_title_settings_light" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch_dark_theme"
-        android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="20dp"
+        style="@style/SettingsItem"
         android:text="@string/dark_theme"
-        android:textSize="16sp"
-        android:textColor="@color/yp_black"
         app:thumbTint="@color/switch_thumb_selector"
         app:trackTint="@color/switch_track_selector" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="20dp"
+        android:id="@+id/tv_share_app"
+        style="@style/SettingsItem"
         android:text="@string/share_app"
-        android:textSize="16sp"
-        android:textColor="@color/yp_black"
         android:drawableEnd="@drawable/ic_share"
-        android:drawablePadding="12dp"
-        android:drawableTint="@color/yp_text_gray" />
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="20dp"
+        android:id="@+id/tv_write_to_support"
+        style="@style/SettingsItem"
         android:text="@string/write_to_support"
-        android:textSize="16sp"
-        android:textColor="@color/yp_black"
         android:drawableEnd="@drawable/ic_support"
-        android:drawablePadding="12dp" />
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="20dp"
+        android:id="@+id/tv_user_agreement"
+        style="@style/SettingsItem"
         android:text="@string/user_agreement"
-        android:textSize="16sp"
-        android:textColor="@color/yp_black"
         android:drawableEnd="@drawable/ic_arrow_right"
-        android:drawablePadding="12dp"
-        android:drawableTint="@color/yp_text_gray" />
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground" />
 
 </LinearLayout>
