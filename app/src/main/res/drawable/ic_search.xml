@@ -1,11 +1,10 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
+    android:width="16dp"
+    android:height="16dp"
     android:viewportWidth="24"
-    android:viewportHeight="24"
-    android:tint="?attr/settingsItemIconColor">
+    android:viewportHeight="24">
     <path
-        android:fillColor="@android:color/white"
-        android:pathData="M15.5,14h-0.79l-0.28,-0.27C15.41,12.59 16,11.11 16,9.5 16,5.91 13.09,3 9.5,3S3,5.91 3,9.5 5.91,16 9.5,16c1.61,0 3.09,-0.59 4.23,-1.57l0.27,0.28v0.79l5,4.99L20.49,19l-4.99,-5zM9.5,14C7.01,14 5,11.99 5,9.5S7.01,5 9.5,5 14,7.01 14,9.5 11.99,14 9.5,14z"/>
+        android:fillColor="@android:color/black"
+        android:pathData="M16.5792,14.9497H15.721L15.4168,14.6564C16.4814,13.418 17.1224,11.8102 17.1224,10.0612C17.1224,6.16124 13.9611,3 10.0612,3C6.16124,3 3,6.16124 3,10.0612C3,13.9611 6.16124,17.1224 10.0612,17.1224C11.8102,17.1224 13.418,16.4814 14.6564,15.4168L14.9497,15.721V16.5792L20.3814,22L22,20.3814L16.5792,14.9497ZM10.0612,14.9497C7.3562,14.9497 5.17267,12.7662 5.17267,10.0612C5.17267,7.3562 7.3562,5.17267 10.0612,5.17267C12.7662,5.17267 14.9497,7.3562 14.9497,10.0612C14.9497,12.7662 12.7662,14.9497 10.0612,14.9497Z"/>
 </vector>
 

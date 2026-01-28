@@ -6,15 +6,15 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 
 class SearchActivity : AppCompatActivity() {
 
-    private lateinit var searchEditText: TextInputEditText
-    private lateinit var searchInputLayout: TextInputLayout
+    private lateinit var searchEditText: EditText
+    private lateinit var clearButton: ImageButton
     private var searchText: String = ""
 
     companion object {
@@ -30,8 +30,8 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
-        searchInputLayout = findViewById(R.id.til_search)
         searchEditText = findViewById(R.id.et_search)
+        clearButton = findViewById(R.id.btn_clear)
 
         // Configure initial clear button visibility
         updateClearButtonVisibility(searchEditText.text)
@@ -55,7 +55,7 @@ class SearchActivity : AppCompatActivity() {
         searchEditText.addTextChangedListener(simpleTextWatcher)
 
         // Clear button logic
-        searchInputLayout.setEndIconOnClickListener {
+        clearButton.setOnClickListener {
             searchEditText.setText("")
             hideKeyboard()
             searchEditText.clearFocus()
@@ -82,9 +82,9 @@ class SearchActivity : AppCompatActivity() {
 
     private fun updateClearButtonVisibility(s: CharSequence?) {
         if (s.isNullOrEmpty()) {
-            searchInputLayout.isEndIconVisible = false
+            clearButton.visibility = View.GONE
         } else {
-            searchInputLayout.isEndIconVisible = true
+            clearButton.visibility = View.VISIBLE
         }
     }
 

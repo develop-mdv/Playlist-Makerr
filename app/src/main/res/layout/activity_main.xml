@@ -13,7 +13,9 @@
         android:minHeight="56dp"
         app:title="@string/playlist_maker"
         app:titleTextAppearance="@style/ToolbarTitle"
-        app:titleTextColor="?attr/toolbarTitleColor" />
+        app:titleTextColor="?attr/toolbarTitleColor"
+        app:contentInsetStart="16dp"
+        app:contentInsetEnd="16dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_search"

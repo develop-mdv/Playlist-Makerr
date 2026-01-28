@@ -36,4 +36,9 @@
     <color name="settings_background_dark">@color/yp_black</color>
     <color name="main_background_light">@color/yp_blue</color>
     <color name="main_background_dark">@color/yp_black</color>
+    <!-- Search field colors -->
+    <color name="search_field_background_light">@color/yp_light_gray</color>
+    <color name="search_field_background_dark">@color/white</color>
+    <color name="search_field_text_light">@color/yp_black</color>
+    <color name="search_field_text_dark">@color/yp_black</color>
 </resources>

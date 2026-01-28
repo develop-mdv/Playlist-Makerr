@@ -21,4 +21,9 @@
     <color name="main_background_dark">@color/yp_black</color>
     <color name="toolbar_title_settings_light">@color/white</color>
     <color name="toolbar_title_settings_dark">@color/white</color>
+    <!-- Search field colors for dark theme -->
+    <color name="search_field_background_light">@color/white</color>
+    <color name="search_field_background_dark">@color/white</color>
+    <color name="search_field_text_light">@color/yp_black</color>
+    <color name="search_field_text_dark">@color/yp_black</color>
 </resources>
