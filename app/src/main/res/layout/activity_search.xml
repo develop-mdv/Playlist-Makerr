@@ -32,36 +32,38 @@
             <EditText
                 android:id="@+id/et_search"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="36dp"
+                android:layout_height="@dimen/search_field_height"
                 android:hint="@string/search"
-                android:textColorHint="@color/yp_text_gray"
+                android:textColorHint="@color/search_field_hint"
                 android:textColor="@color/search_field_text_light"
                 android:background="@drawable/search_field_background"
-                android:paddingStart="36dp"
-                android:paddingEnd="36dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:paddingStart="@dimen/search_field_icon_start_padding"
+                android:paddingEnd="@dimen/search_field_padding_end"
+                android:paddingTop="0dp"
+                android:paddingBottom="0dp"
+                android:gravity="center_vertical"
                 android:imeOptions="actionDone"
                 android:inputType="text"
                 android:maxLines="1"
                 android:singleLine="true"
+                android:textAppearance="@style/SearchFieldTextAppearance"
                 android:drawableStart="@drawable/ic_search"
-                android:drawablePadding="8dp"
-                android:drawableTint="@color/yp_text_gray" />
+                android:drawablePadding="@dimen/search_field_icon_drawable_padding"
+                app:drawableTint="@color/search_field_icon" />
 
             <ImageButton
                 android:id="@+id/btn_clear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/search_field_height"
+                android:layout_height="@dimen/search_field_height"
                 android:layout_gravity="end|center_vertical"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_clear"
                 android:contentDescription="@string/search"
-                android:padding="8dp"
-                android:layout_marginEnd="8dp"
+                android:padding="10dp"
+                android:layout_marginEnd="@dimen/search_field_clear_margin_end"
+                android:scaleType="centerInside"
                 android:visibility="gone"
-                app:tint="@color/yp_text_gray" />
+                app:tint="@color/search_field_icon" />
 
         </FrameLayout>
 

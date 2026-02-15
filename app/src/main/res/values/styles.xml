@@ -25,6 +25,13 @@
         <item name="android:elevation">4dp</item>
     </style>
 
+    <!-- Search field - Figma YS/Regular/16 -->
+    <style name="SearchFieldTextAppearance" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineHeight">19sp</item>
+    </style>
+
     <!-- Settings Item Style -->
     <style name="SettingsItem" parent="Widget.MaterialComponents.TextView">
         <item name="android:layout_width">match_parent</item>

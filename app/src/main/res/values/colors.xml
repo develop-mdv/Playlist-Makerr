@@ -41,4 +41,6 @@
     <color name="search_field_background_dark">@color/white</color>
     <color name="search_field_text_light">@color/yp_black</color>
     <color name="search_field_text_dark">@color/yp_black</color>
+    <color name="search_field_hint">@color/yp_text_gray</color>
+    <color name="search_field_icon">@color/yp_text_gray</color>
 </resources>
