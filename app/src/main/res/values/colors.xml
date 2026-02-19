@@ -47,4 +47,8 @@
     <color name="track_title_text">@color/yp_black</color>
     <color name="track_subtitle_text">@color/yp_text_gray</color>
     <color name="track_arrow_tint">@color/yp_text_gray</color>
+    <!-- Placeholder colors -->
+    <color name="placeholder_text_color">@color/yp_black</color>
+    <color name="placeholder_button_bg">@color/yp_black</color>
+    <color name="placeholder_button_text">@color/white</color>
 </resources>

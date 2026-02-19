@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class TrackAdapter(
     private val tracks: List<Track>
@@ -34,9 +36,13 @@ class TrackAdapter(
         private val trackTimeTextView: TextView = itemView.findViewById(R.id.tv_track_time)
 
         fun bind(track: Track) {
-            trackNameTextView.text = track.trackName
-            artistNameTextView.text = track.artistName
-            trackTimeTextView.text = track.trackTime
+            trackNameTextView.text = track.trackName ?: ""
+            artistNameTextView.text = track.artistName ?: ""
+            trackTimeTextView.text = if (track.trackTimeMillis != null) {
+                SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
+            } else {
+                ""
+            }
 
             val radius = itemView.resources.getDimensionPixelSize(R.dimen.track_cover_corner_radius)
 
@@ -49,4 +55,3 @@ class TrackAdapter(
         }
     }
 }
-

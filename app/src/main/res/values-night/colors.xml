@@ -32,4 +32,8 @@
     <color name="track_title_text">@color/white</color>
     <color name="track_subtitle_text">@color/white</color>
     <color name="track_arrow_tint">@color/white</color>
+    <!-- Placeholder colors for dark theme -->
+    <color name="placeholder_text_color">@color/white</color>
+    <color name="placeholder_button_bg">@color/white</color>
+    <color name="placeholder_button_text">@color/yp_black</color>
 </resources>
