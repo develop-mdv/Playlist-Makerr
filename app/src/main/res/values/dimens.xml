@@ -26,5 +26,17 @@
     <dimen name="track_arrow_margin_end">12dp</dimen>
     <dimen name="track_subtitle_text_size">11sp</dimen>
     <dimen name="track_dot_padding_horizontal">5dp</dimen>
+
+    <!-- Placeholder -->
+    <dimen name="placeholder_image_size">120dp</dimen>
+    <dimen name="placeholder_text_size">19sp</dimen>
+    <dimen name="placeholder_margin_horizontal">24dp</dimen>
+    <dimen name="placeholder_image_margin_top">102dp</dimen>
+    <dimen name="placeholder_text_margin_top">16dp</dimen>
+    <dimen name="placeholder_button_margin_top">24dp</dimen>
+    <dimen name="placeholder_button_text_size">14sp</dimen>
+    <dimen name="placeholder_button_padding_horizontal">14dp</dimen>
+    <dimen name="placeholder_button_padding_vertical">10dp</dimen>
+    <dimen name="placeholder_button_corner_radius">54dp</dimen>
 </resources>
 
