@@ -28,4 +28,8 @@
     <color name="search_field_text_dark">@color/yp_black</color>
     <color name="search_field_hint">@color/yp_black</color>
     <color name="search_field_icon">@color/yp_black</color>
+    <!-- Track list colors for dark theme -->
+    <color name="track_title_text">@color/white</color>
+    <color name="track_subtitle_text">@color/white</color>
+    <color name="track_arrow_tint">@color/white</color>
 </resources>
