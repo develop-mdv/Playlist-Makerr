@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="toolbarTitleColor" format="color" />
+    <attr name="buttonTextColor" format="color" />
+    <attr name="buttonIconColor" format="color" />
+    <attr name="settingsItemTextColor" format="color" />
+    <attr name="settingsItemIconColor" format="color" />
+</resources>

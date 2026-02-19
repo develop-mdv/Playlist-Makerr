@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/yp_blue"
+    android:background="@color/main_background_light"
     android:padding="@dimen/screen_padding">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -13,51 +13,29 @@
         android:minHeight="56dp"
         app:title="@string/playlist_maker"
         app:titleTextAppearance="@style/ToolbarTitle"
-        app:titleTextColor="@color/white" />
+        app:titleTextColor="?attr/toolbarTitleColor"
+        app:contentInsetStart="16dp"
+        app:contentInsetEnd="16dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_search"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
+        style="@style/ButtonBig"
         android:layout_marginTop="24dp"
         android:text="@string/search"
-        android:textColor="@color/yp_black"
-        android:backgroundTint="@color/white"
-        app:cornerRadius="@dimen/button_corner_radius"
-        app:iconTint="@color/yp_black"
-        app:iconPadding="@dimen/button_icon_padding"
-        app:iconGravity="textStart"
         app:icon="@drawable/ic_search" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_library"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
+        style="@style/ButtonBig"
         android:layout_marginTop="@dimen/button_spacing"
         android:text="@string/library"
-        android:textColor="@color/yp_black"
-        android:backgroundTint="@color/white"
-        app:cornerRadius="@dimen/button_corner_radius"
-        app:iconTint="@color/yp_black"
-        app:iconPadding="@dimen/button_icon_padding"
-        app:iconGravity="textStart"
         app:icon="@drawable/ic_library" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_settings"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
+        style="@style/ButtonBig"
         android:layout_marginTop="@dimen/button_spacing"
         android:text="@string/settings"
-        android:textColor="@color/yp_black"
-        android:backgroundTint="@color/white"
-        app:cornerRadius="@dimen/button_corner_radius"
-        app:iconTint="@color/yp_black"
-        app:iconPadding="@dimen/button_icon_padding"
-        app:iconGravity="textStart"
         app:icon="@drawable/ic_settings" />
 
 </LinearLayout>

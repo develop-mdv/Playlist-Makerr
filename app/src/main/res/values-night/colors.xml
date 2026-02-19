@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Override colors for dark theme -->
+    <color name="background_light">@color/yp_black</color>
+    <color name="background_dark">@color/yp_black</color>
+    <color name="button_background_light">@color/white</color>
+    <color name="button_background_dark">@color/white</color>
+    <color name="button_text_light">@color/yp_black</color>
+    <color name="button_text_dark">@color/yp_black</color>
+    <color name="button_icon_light">@color/yp_black</color>
+    <color name="button_icon_dark">@color/yp_black</color>
+    <color name="toolbar_title_light">@color/white</color>
+    <color name="toolbar_title_dark">@color/white</color>
+    <color name="settings_item_text_light">@color/white</color>
+    <color name="settings_item_text_dark">@color/white</color>
+    <color name="settings_item_icon_light">@color/white</color>
+    <color name="settings_item_icon_dark">@color/white</color>
+    <color name="settings_background_light">@color/yp_black</color>
+    <color name="settings_background_dark">@color/yp_black</color>
+    <color name="main_background_light">@color/yp_black</color>
+    <color name="main_background_dark">@color/yp_black</color>
+    <color name="toolbar_title_settings_light">@color/white</color>
+    <color name="toolbar_title_settings_dark">@color/white</color>
+    <!-- Search field colors for dark theme -->
+    <color name="search_field_background_light">@color/white</color>
+    <color name="search_field_background_dark">@color/white</color>
+    <color name="search_field_text_light">@color/yp_black</color>
+    <color name="search_field_text_dark">@color/yp_black</color>
+    <color name="search_field_hint">@color/yp_black</color>
+    <color name="search_field_icon">@color/yp_black</color>
+</resources>
