@@ -43,4 +43,8 @@
     <color name="search_field_text_dark">@color/yp_black</color>
     <color name="search_field_hint">@color/yp_text_gray</color>
     <color name="search_field_icon">@color/yp_text_gray</color>
+    <!-- Track list colors -->
+    <color name="track_title_text">@color/yp_black</color>
+    <color name="track_subtitle_text">@color/yp_text_gray</color>
+    <color name="track_arrow_tint">@color/yp_text_gray</color>
 </resources>
