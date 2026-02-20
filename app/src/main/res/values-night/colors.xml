@@ -36,4 +36,12 @@
     <color name="placeholder_text_color">@color/white</color>
     <color name="placeholder_button_bg">@color/white</color>
     <color name="placeholder_button_text">@color/yp_black</color>
+    <!-- Player colors for dark theme -->
+    <color name="player_background">@color/yp_black</color>
+    <color name="player_text_primary">@color/white</color>
+    <color name="player_button_circle_bg">#40FFFFFF</color>
+    <color name="player_cover_placeholder_bg">#2C2C35</color>
+    <color name="player_secondary_icon_tint">@color/white</color>
+    <color name="player_play_button_bg">@color/white</color>
+    <color name="player_play_icon_tint">@color/yp_black</color>
 </resources>
