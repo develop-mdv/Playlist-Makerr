@@ -97,7 +97,7 @@
             android:layout_width="@dimen/player_play_button_size"
             android:layout_height="@dimen/player_play_button_size"
             android:layout_marginTop="30dp"
-            android:padding="28dp"
+            android:padding="@dimen/player_play_button_padding"
             android:background="@drawable/player_play_button_bg"
             android:contentDescription="@string/play_button"
             android:scaleType="fitCenter"
