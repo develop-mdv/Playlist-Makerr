@@ -34,8 +34,16 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var placeholderText: TextView
     private lateinit var refreshButton: MaterialButton
 
+    private lateinit var historyLayout: View
+    private lateinit var historyRecyclerView: RecyclerView
+    private lateinit var historyAdapter: TrackAdapter
+    private lateinit var clearHistoryButton: MaterialButton
+
+    private lateinit var searchHistory: SearchHistory
+
     private var searchText: String = ""
     private val tracks = ArrayList<Track>()
+    private val historyTracks = ArrayList<Track>()
     private var lastQuery: String = ""
 
     private val retrofit = Retrofit.Builder()
@@ -47,11 +55,15 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val SEARCH_QUERY = "SEARCH_QUERY"
+        const val SEARCH_HISTORY_PREFERENCES = "search_history_preferences"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
+        val sharedPreferences = getSharedPreferences(SEARCH_HISTORY_PREFERENCES, Context.MODE_PRIVATE)
+        searchHistory = SearchHistory(sharedPreferences)
 
         val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
         toolbar.setNavigationOnClickListener { finish() }
@@ -64,17 +76,43 @@ class SearchActivity : AppCompatActivity() {
         placeholderText = findViewById(R.id.tv_placeholder)
         refreshButton = findViewById(R.id.btn_refresh)
 
-        trackAdapter = TrackAdapter(tracks)
+        historyLayout = findViewById(R.id.history_layout)
+        historyRecyclerView = findViewById(R.id.rv_history)
+        clearHistoryButton = findViewById(R.id.btn_clear_history)
+
+        trackAdapter = TrackAdapter(tracks) { track ->
+            searchHistory.addTrack(track)
+            updateHistoryList()
+        }
         tracksRecyclerView.layoutManager = LinearLayoutManager(this)
         tracksRecyclerView.adapter = trackAdapter
 
+        historyAdapter = TrackAdapter(historyTracks) { track ->
+            searchHistory.addTrack(track)
+            updateHistoryList()
+        }
+        historyRecyclerView.layoutManager = LinearLayoutManager(this)
+        historyRecyclerView.adapter = historyAdapter
+
+        clearHistoryButton.setOnClickListener {
+            searchHistory.clearHistory()
+            historyTracks.clear()
+            historyAdapter.notifyDataSetChanged()
+            historyLayout.visibility = View.GONE
+        }
+
         updateClearButtonVisibility(searchEditText.text)
+
+        searchEditText.setOnFocusChangeListener { _, hasFocus ->
+            showHistoryIfNeeded(hasFocus, searchEditText.text)
+        }
 
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchText = s.toString()
                 updateClearButtonVisibility(s)
+                showHistoryIfNeeded(searchEditText.hasFocus(), s)
             }
             override fun afterTextChanged(s: Editable?) {}
         }
@@ -94,11 +132,11 @@ class SearchActivity : AppCompatActivity() {
         clearButton.setOnClickListener {
             searchEditText.setText("")
             hideKeyboard()
-            searchEditText.clearFocus()
             tracks.clear()
             trackAdapter.notifyDataSetChanged()
             tracksRecyclerView.visibility = View.GONE
             placeholderLayout.visibility = View.GONE
+            showHistoryIfNeeded(hasFocus = true, text = "")
         }
 
         refreshButton.setOnClickListener {
@@ -106,6 +144,27 @@ class SearchActivity : AppCompatActivity() {
                 search(lastQuery)
             }
         }
+    }
+
+    private fun showHistoryIfNeeded(hasFocus: Boolean, text: CharSequence?) {
+        val history = searchHistory.getHistory()
+        if (hasFocus && text.isNullOrEmpty() && history.isNotEmpty()) {
+            historyTracks.clear()
+            historyTracks.addAll(history)
+            historyAdapter.notifyDataSetChanged()
+            historyLayout.visibility = View.VISIBLE
+            tracksRecyclerView.visibility = View.GONE
+            placeholderLayout.visibility = View.GONE
+        } else {
+            historyLayout.visibility = View.GONE
+        }
+    }
+
+    private fun updateHistoryList() {
+        val history = searchHistory.getHistory()
+        historyTracks.clear()
+        historyTracks.addAll(history)
+        historyAdapter.notifyDataSetChanged()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -122,6 +181,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun search(query: String) {
         lastQuery = query
+        historyLayout.visibility = View.GONE
 
         itunesApi.search(query).enqueue(object : Callback<ItunesResponse> {
             override fun onResponse(call: Call<ItunesResponse>, response: Response<ItunesResponse>) {
