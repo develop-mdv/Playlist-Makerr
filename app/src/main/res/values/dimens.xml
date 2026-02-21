@@ -38,5 +38,13 @@
     <dimen name="placeholder_button_padding_horizontal">14dp</dimen>
     <dimen name="placeholder_button_padding_vertical">10dp</dimen>
     <dimen name="placeholder_button_corner_radius">54dp</dimen>
+
+    <!-- Player -->
+    <dimen name="player_cover_corner_radius">8dp</dimen>
+    <dimen name="player_cover_margin">24dp</dimen>
+    <dimen name="player_play_button_size">100dp</dimen>
+    <dimen name="player_play_button_padding">8dp</dimen>
+    <dimen name="player_secondary_button_size">51dp</dimen>
+    <dimen name="player_info_padding_vertical">8dp</dimen>
 </resources>
 

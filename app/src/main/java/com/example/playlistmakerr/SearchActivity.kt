@@ -1,6 +1,7 @@
 package com.example.playlistmakerr
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -83,6 +84,7 @@ class SearchActivity : AppCompatActivity() {
         trackAdapter = TrackAdapter(tracks) { track ->
             searchHistory.addTrack(track)
             updateHistoryList()
+            openPlayer(track)
         }
         tracksRecyclerView.layoutManager = LinearLayoutManager(this)
         tracksRecyclerView.adapter = trackAdapter
@@ -90,6 +92,7 @@ class SearchActivity : AppCompatActivity() {
         historyAdapter = TrackAdapter(historyTracks) { track ->
             searchHistory.addTrack(track)
             updateHistoryList()
+            openPlayer(track)
         }
         historyRecyclerView.layoutManager = LinearLayoutManager(this)
         historyRecyclerView.adapter = historyAdapter
@@ -236,6 +239,12 @@ class SearchActivity : AppCompatActivity() {
         } else {
             clearButton.visibility = View.VISIBLE
         }
+    }
+
+    private fun openPlayer(track: Track) {
+        val intent = Intent(this, PlayerActivity::class.java)
+        intent.putExtra(PlayerActivity.EXTRA_TRACK, track)
+        startActivity(intent)
     }
 
     private fun hideKeyboard() {
