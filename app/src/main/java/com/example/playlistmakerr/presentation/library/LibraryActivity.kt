@@ -1,7 +1,8 @@
-package com.example.playlistmakerr
+package com.example.playlistmakerr.presentation.library
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.playlistmakerr.R
 
 class LibraryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -9,5 +10,3 @@ class LibraryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_library)
     }
 }
-
-

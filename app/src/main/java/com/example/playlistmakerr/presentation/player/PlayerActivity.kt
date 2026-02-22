@@ -1,4 +1,4 @@
-package com.example.playlistmakerr
+package com.example.playlistmakerr.presentation.player
 
 import android.media.MediaPlayer
 import android.os.Build
@@ -14,6 +14,8 @@ import androidx.constraintlayout.widget.Group
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmakerr.R
+import com.example.playlistmakerr.domain.models.Track
 import com.google.android.material.appbar.MaterialToolbar
 import java.text.SimpleDateFormat
 import java.util.Locale
