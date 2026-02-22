@@ -1,8 +1,12 @@
 package com.example.playlistmakerr
 
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +22,30 @@ class PlayerActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_TRACK = "track"
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+        private const val PLAYBACK_UPDATE_DELAY = 300L
+    }
+
+    private var playerState = STATE_DEFAULT
+    private var mediaPlayer = MediaPlayer()
+    private val handler = Handler(Looper.getMainLooper())
+
+    private lateinit var playButton: ImageButton
+    private lateinit var playTimeText: TextView
+
+    private val updateTimeRunnable = object : Runnable {
+        override fun run() {
+            if (playerState == STATE_PLAYING) {
+                playTimeText.text = SimpleDateFormat(
+                    "mm:ss",
+                    Locale.getDefault()
+                ).format(mediaPlayer.currentPosition)
+                handler.postDelayed(this, PLAYBACK_UPDATE_DELAY)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +78,9 @@ class PlayerActivity : AppCompatActivity() {
         val albumGroup = findViewById<Group>(R.id.albumGroup)
         val yearGroup = findViewById<Group>(R.id.yearGroup)
 
+        playButton = findViewById(R.id.playButton)
+        playTimeText = findViewById(R.id.playTime)
+
         trackNameText.text = track.trackName ?: ""
         artistNameText.text = track.artistName ?: ""
 
@@ -81,5 +112,61 @@ class PlayerActivity : AppCompatActivity() {
             .placeholder(R.drawable.player_cover_placeholder)
             .error(R.drawable.player_cover_placeholder)
             .into(coverImage)
+
+        preparePlayer(track.previewUrl)
+
+        playButton.setOnClickListener {
+            playbackControl()
+        }
+    }
+
+    private fun preparePlayer(url: String?) {
+        if (url.isNullOrEmpty()) return
+
+        mediaPlayer.setDataSource(url)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            handler.removeCallbacks(updateTimeRunnable)
+            playerState = STATE_PREPARED
+            playButton.setImageResource(R.drawable.ic_play_arrow)
+            playTimeText.text = getString(R.string.default_play_time)
+        }
+    }
+
+    private fun playbackControl() {
+        when (playerState) {
+            STATE_PLAYING -> pausePlayer()
+            STATE_PREPARED, STATE_PAUSED -> startPlayer()
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer.start()
+        playerState = STATE_PLAYING
+        playButton.setImageResource(R.drawable.ic_pause)
+        handler.post(updateTimeRunnable)
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        playerState = STATE_PAUSED
+        playButton.setImageResource(R.drawable.ic_play_arrow)
+        handler.removeCallbacks(updateTimeRunnable)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (playerState == STATE_PLAYING) {
+            pausePlayer()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(updateTimeRunnable)
+        mediaPlayer.release()
     }
 }
