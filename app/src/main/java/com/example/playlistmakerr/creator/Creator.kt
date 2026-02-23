@@ -1,6 +1,8 @@
 package com.example.playlistmakerr.creator
 
 import android.content.Context
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmakerr.data.network.ItunesApi
 import com.example.playlistmakerr.data.network.RetrofitNetworkClient
 import com.example.playlistmakerr.data.repository.SearchHistoryRepositoryImpl
@@ -15,6 +17,9 @@ import com.example.playlistmakerr.domain.api.TracksRepository
 import com.example.playlistmakerr.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmakerr.domain.impl.SettingsInteractorImpl
 import com.example.playlistmakerr.domain.impl.TracksInteractorImpl
+import com.example.playlistmakerr.presentation.player.PlayerViewModel
+import com.example.playlistmakerr.presentation.search.SearchViewModel
+import com.example.playlistmakerr.presentation.settings.SettingsViewModel
 import com.google.gson.Gson
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -60,5 +65,37 @@ object Creator {
 
     fun provideSettingsInteractor(context: Context): SettingsInteractor {
         return SettingsInteractorImpl(getSettingsRepository(context))
+    }
+
+    fun provideSearchViewModelFactory(context: Context): ViewModelProvider.Factory {
+        return object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return SearchViewModel(
+                    provideTracksInteractor(),
+                    provideSearchHistoryInteractor(context),
+                ) as T
+            }
+        }
+    }
+
+    fun providePlayerViewModelFactory(): ViewModelProvider.Factory {
+        return object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return PlayerViewModel() as T
+            }
+        }
+    }
+
+    fun provideSettingsViewModelFactory(context: Context): ViewModelProvider.Factory {
+        return object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return SettingsViewModel(
+                    provideSettingsInteractor(context),
+                ) as T
+            }
+        }
     }
 }
