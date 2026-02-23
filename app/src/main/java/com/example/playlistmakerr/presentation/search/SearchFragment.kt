@@ -1,13 +1,14 @@
 package com.example.playlistmakerr.presentation.search
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -16,17 +17,17 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmakerr.R
 import com.example.playlistmakerr.domain.models.Track
-import com.example.playlistmakerr.presentation.player.PlayerActivity
-import com.google.android.material.appbar.MaterialToolbar
+import com.example.playlistmakerr.presentation.player.PlayerFragment
 import com.google.android.material.button.MaterialButton
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
 
     private lateinit var searchEditText: EditText
     private lateinit var clearButton: ImageButton
@@ -59,26 +60,30 @@ class SearchActivity : AppCompatActivity() {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        return inflater.inflate(R.layout.fragment_search, container, false)
+    }
 
-        val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
-        toolbar.setNavigationOnClickListener { finish() }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        searchEditText = findViewById(R.id.et_search)
-        clearButton = findViewById(R.id.btn_clear)
-        tracksRecyclerView = findViewById(R.id.rv_tracks)
-        placeholderLayout = findViewById(R.id.placeholder_layout)
-        placeholderImage = findViewById(R.id.iv_placeholder)
-        placeholderText = findViewById(R.id.tv_placeholder)
-        refreshButton = findViewById(R.id.btn_refresh)
-        progressBar = findViewById(R.id.progressBar)
-        searchContentFrame = findViewById(R.id.searchContentFrame)
+        searchEditText = view.findViewById(R.id.et_search)
+        clearButton = view.findViewById(R.id.btn_clear)
+        tracksRecyclerView = view.findViewById(R.id.rv_tracks)
+        placeholderLayout = view.findViewById(R.id.placeholder_layout)
+        placeholderImage = view.findViewById(R.id.iv_placeholder)
+        placeholderText = view.findViewById(R.id.tv_placeholder)
+        refreshButton = view.findViewById(R.id.btn_refresh)
+        progressBar = view.findViewById(R.id.progressBar)
+        searchContentFrame = view.findViewById(R.id.searchContentFrame)
 
-        historyLayout = findViewById(R.id.history_layout)
-        historyRecyclerView = findViewById(R.id.rv_history)
-        clearHistoryButton = findViewById(R.id.btn_clear_history)
+        historyLayout = view.findViewById(R.id.history_layout)
+        historyRecyclerView = view.findViewById(R.id.rv_history)
+        clearHistoryButton = view.findViewById(R.id.btn_clear_history)
 
         trackAdapter = TrackAdapter(tracks) { track ->
             if (clickDebounce()) {
@@ -86,7 +91,7 @@ class SearchActivity : AppCompatActivity() {
                 openPlayer(track)
             }
         }
-        tracksRecyclerView.layoutManager = LinearLayoutManager(this)
+        tracksRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         tracksRecyclerView.adapter = trackAdapter
 
         historyAdapter = TrackAdapter(historyTracks) { track ->
@@ -95,7 +100,7 @@ class SearchActivity : AppCompatActivity() {
                 openPlayer(track)
             }
         }
-        historyRecyclerView.layoutManager = LinearLayoutManager(this)
+        historyRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         historyRecyclerView.adapter = historyAdapter
 
         clearHistoryButton.setOnClickListener {
@@ -143,26 +148,14 @@ class SearchActivity : AppCompatActivity() {
             viewModel.refreshSearch()
         }
 
-        viewModel.screenState.observe(this) { state ->
+        viewModel.screenState.observe(viewLifecycleOwner) { state ->
             render(state)
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         handler.removeCallbacks(clickRunnable)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_QUERY, searchText)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        searchText = savedInstanceState.getString(SEARCH_QUERY, "")
-        searchEditText.setText(searchText)
-        searchEditText.setSelection(searchEditText.text?.length ?: 0)
     }
 
     private fun render(state: SearchScreenState) {
@@ -235,14 +228,15 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun openPlayer(track: Track) {
-        val intent = Intent(this, PlayerActivity::class.java)
-        intent.putExtra(PlayerActivity.EXTRA_TRACK, track)
-        startActivity(intent)
+        val bundle = Bundle().apply {
+            putSerializable(PlayerFragment.EXTRA_TRACK, track)
+        }
+        findNavController().navigate(R.id.action_searchFragment_to_playerFragment, bundle)
     }
 
     private fun hideKeyboard() {
         val inputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         inputMethodManager?.hideSoftInputFromWindow(searchEditText.windowToken, 0)
     }
 }

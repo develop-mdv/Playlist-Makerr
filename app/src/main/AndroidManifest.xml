@@ -18,16 +18,13 @@
 
         <activity
             android:name=".presentation.main.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.settings.SettingsActivity" />
-        <activity android:name=".presentation.search.SearchActivity" />
-        <activity android:name=".presentation.library.LibraryActivity" />
-        <activity android:name=".presentation.player.PlayerActivity" />
 
     </application>
 

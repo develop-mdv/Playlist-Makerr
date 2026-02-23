@@ -50,6 +50,8 @@ dependencies {
     implementation("io.insert-koin:koin-android:3.3.0")
     implementation("androidx.viewpager2:viewpager2:1.1.0")
     implementation("androidx.fragment:fragment-ktx:1.8.5")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.8.5")
+    implementation("androidx.navigation:navigation-ui-ktx:2.8.5")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

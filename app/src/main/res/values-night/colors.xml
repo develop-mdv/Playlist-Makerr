@@ -53,4 +53,6 @@
     <color name="tab_indicator_light">@color/white</color>
     <color name="new_playlist_button_bg_light">@color/white</color>
     <color name="new_playlist_button_text_light">@color/yp_black</color>
+    <!-- Bottom Navigation -->
+    <color name="bottom_nav_inactive">@color/white</color>
 </resources>
