@@ -44,4 +44,13 @@
     <color name="player_secondary_icon_tint">@color/white</color>
     <color name="player_play_button_bg">@color/white</color>
     <color name="player_play_icon_tint">@color/yp_black</color>
+    <!-- Library colors -->
+    <color name="library_background_light">@color/yp_black</color>
+    <color name="library_toolbar_text_light">@color/white</color>
+    <color name="library_toolbar_icon_light">@color/white</color>
+    <color name="tab_text_active_light">@color/white</color>
+    <color name="tab_text_inactive_light">@color/white</color>
+    <color name="tab_indicator_light">@color/white</color>
+    <color name="new_playlist_button_bg_light">@color/white</color>
+    <color name="new_playlist_button_text_light">@color/yp_black</color>
 </resources>

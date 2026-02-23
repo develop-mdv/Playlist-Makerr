@@ -32,6 +32,15 @@
         <item name="android:lineHeight">19sp</item>
     </style>
 
+    <!-- Library Tab Layout Style -->
+    <style name="LibraryTabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineHeight">18sp</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
     <!-- Settings Item Style -->
     <style name="SettingsItem" parent="Widget.MaterialComponents.TextView">
         <item name="android:layout_width">match_parent</item>

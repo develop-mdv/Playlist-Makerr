@@ -1,16 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:orientation="vertical"
+    android:background="@color/library_background_light">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:minHeight="56dp"
+        app:title="@string/library_title"
+        app:titleTextAppearance="@style/ToolbarTitle"
+        app:titleTextColor="@color/library_toolbar_text_light"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:navigationIconTint="@color/library_toolbar_icon_light" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Library screen"
-        android:textColor="@color/yp_black" />
+        android:background="@null"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        app:tabIndicatorColor="@color/tab_indicator_light"
+        app:tabIndicatorFullWidth="true"
+        app:tabSelectedTextColor="@color/tab_text_active_light"
+        app:tabTextColor="@color/tab_text_inactive_light"
+        app:tabTextAppearance="@style/LibraryTabText"
+        app:tabRippleColor="@android:color/transparent" />
 
-</FrameLayout>
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-
+</LinearLayout>

@@ -30,4 +30,11 @@
     <string name="add_to_playlist">Добавить в плейлист</string>
     <string name="add_to_favorites">Добавить в избранное</string>
     <string name="default_play_time">00:00</string>
+    <!-- Library -->
+    <string name="library_title">Медиатека</string>
+    <string name="tab_favorite_tracks">Избранные треки</string>
+    <string name="tab_playlists">Плейлисты</string>
+    <string name="new_playlist">Новый плейлист</string>
+    <string name="favorites_empty">Ваша медиатека пуста</string>
+    <string name="playlists_empty">Вы не создали\nни одного плейлиста</string>
 </resources>
