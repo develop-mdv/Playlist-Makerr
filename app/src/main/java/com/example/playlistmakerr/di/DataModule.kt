@@ -1,6 +1,7 @@
 package com.example.playlistmakerr.di
 
 import android.content.Context
+import android.media.MediaPlayer
 import com.example.playlistmakerr.data.network.ItunesApi
 import com.example.playlistmakerr.data.network.NetworkClient
 import com.example.playlistmakerr.data.network.RetrofitNetworkClient
@@ -32,6 +33,8 @@ val dataModule = module {
     }
 
     factory { Gson() }
+
+    factory { MediaPlayer() }
 
     single<NetworkClient> {
         RetrofitNetworkClient(get())

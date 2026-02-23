@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerViewModel : ViewModel() {
+class PlayerViewModel(private val mediaPlayer: MediaPlayer) : ViewModel() {
 
     companion object {
         private const val PLAYBACK_UPDATE_DELAY = 300L
@@ -19,15 +19,14 @@ class PlayerViewModel : ViewModel() {
     private val _playerState = MutableLiveData<PlayerScreenState>(PlayerScreenState.Default)
     val playerState: LiveData<PlayerScreenState> = _playerState
 
-    private var mediaPlayer: MediaPlayer? = null
+    private var isPrepared = false
     private val handler = Handler(Looper.getMainLooper())
     private val timeFormatter = SimpleDateFormat("mm:ss", Locale.getDefault())
 
     private val updateTimeRunnable = object : Runnable {
         override fun run() {
             if (_playerState.value is PlayerScreenState.Playing) {
-                val position = mediaPlayer?.currentPosition?.let { timeFormatter.format(it) }
-                    ?: DEFAULT_POSITION
+                val position = timeFormatter.format(mediaPlayer.currentPosition)
                 _playerState.value = PlayerScreenState.Playing(position)
                 handler.postDelayed(this, PLAYBACK_UPDATE_DELAY)
             }
@@ -35,10 +34,11 @@ class PlayerViewModel : ViewModel() {
     }
 
     fun prepare(url: String?) {
-        if (mediaPlayer != null) return
+        if (isPrepared) return
         if (url.isNullOrEmpty()) return
 
-        mediaPlayer = MediaPlayer().apply {
+        isPrepared = true
+        mediaPlayer.apply {
             setDataSource(url)
             prepareAsync()
             setOnPreparedListener {
@@ -60,17 +60,15 @@ class PlayerViewModel : ViewModel() {
     }
 
     fun pause() {
-        mediaPlayer?.pause()
-        val position = mediaPlayer?.currentPosition?.let { timeFormatter.format(it) }
-            ?: DEFAULT_POSITION
+        mediaPlayer.pause()
+        val position = timeFormatter.format(mediaPlayer.currentPosition)
         _playerState.value = PlayerScreenState.Paused(position)
         handler.removeCallbacks(updateTimeRunnable)
     }
 
     private fun play() {
-        mediaPlayer?.start()
-        val position = mediaPlayer?.currentPosition?.let { timeFormatter.format(it) }
-            ?: DEFAULT_POSITION
+        mediaPlayer.start()
+        val position = timeFormatter.format(mediaPlayer.currentPosition)
         _playerState.value = PlayerScreenState.Playing(position)
         handler.post(updateTimeRunnable)
     }
@@ -78,7 +76,6 @@ class PlayerViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         handler.removeCallbacks(updateTimeRunnable)
-        mediaPlayer?.release()
-        mediaPlayer = null
+        mediaPlayer.release()
     }
 }
