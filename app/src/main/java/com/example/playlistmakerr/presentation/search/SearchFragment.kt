@@ -153,6 +153,11 @@ class SearchFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        isClickAllowed = true
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         handler.removeCallbacks(clickRunnable)
