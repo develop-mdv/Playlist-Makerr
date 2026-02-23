@@ -59,4 +59,13 @@
     <color name="player_cover_placeholder_bg">@color/yp_light_gray</color>
     <color name="player_play_button_bg">@color/yp_black</color>
     <color name="player_play_icon_tint">@color/white</color>
+    <!-- Library colors -->
+    <color name="library_background_light">@color/white</color>
+    <color name="library_toolbar_text_light">@color/yp_black</color>
+    <color name="library_toolbar_icon_light">@color/yp_black</color>
+    <color name="tab_text_active_light">@color/yp_black</color>
+    <color name="tab_text_inactive_light">@color/yp_black</color>
+    <color name="tab_indicator_light">@color/yp_black</color>
+    <color name="new_playlist_button_bg_light">@color/yp_black</color>
+    <color name="new_playlist_button_text_light">@color/white</color>
 </resources>
