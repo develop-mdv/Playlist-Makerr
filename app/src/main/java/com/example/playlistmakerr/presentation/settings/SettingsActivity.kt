@@ -5,26 +5,20 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmakerr.R
-import com.example.playlistmakerr.creator.Creator
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel by viewModel<SettingsViewModel>()
     private lateinit var switchDarkTheme: SwitchMaterial
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
-        viewModel = ViewModelProvider(
-            this,
-            Creator.provideSettingsViewModelFactory(applicationContext)
-        )[SettingsViewModel::class.java]
 
         val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
         toolbar.setNavigationOnClickListener {
