@@ -5,23 +5,26 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmakerr.R
 import com.example.playlistmakerr.creator.Creator
-import com.example.playlistmakerr.domain.api.SettingsInteractor
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var settingsInteractor: SettingsInteractor
+    private lateinit var viewModel: SettingsViewModel
     private lateinit var switchDarkTheme: SwitchMaterial
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        settingsInteractor = Creator.provideSettingsInteractor(applicationContext)
+        viewModel = ViewModelProvider(
+            this,
+            Creator.provideSettingsViewModelFactory(applicationContext)
+        )[SettingsViewModel::class.java]
 
         val toolbar: MaterialToolbar = findViewById(R.id.toolbar)
         toolbar.setNavigationOnClickListener {
@@ -30,12 +33,13 @@ class SettingsActivity : AppCompatActivity() {
 
         switchDarkTheme = findViewById(R.id.switch_dark_theme)
 
-        val isDarkTheme = settingsInteractor.isDarkTheme()
-        switchDarkTheme.isChecked = isDarkTheme
-
-        switchDarkTheme.setOnCheckedChangeListener { _, isChecked ->
-            settingsInteractor.switchTheme(isChecked)
-            applyTheme(isChecked)
+        viewModel.isDarkTheme.observe(this) { isDark ->
+            switchDarkTheme.setOnCheckedChangeListener(null)
+            switchDarkTheme.isChecked = isDark
+            switchDarkTheme.setOnCheckedChangeListener { _, isChecked ->
+                viewModel.switchTheme(isChecked)
+            }
+            applyTheme(isDark)
         }
 
         val tvShareApp: MaterialTextView = findViewById(R.id.tv_share_app)
