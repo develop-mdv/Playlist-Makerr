@@ -48,7 +48,7 @@
     <dimen name="player_info_padding_vertical">8dp</dimen>
 
     <!-- Library / Media -->
-    <dimen name="library_placeholder_margin_top">102dp</dimen>
+    <dimen name="library_placeholder_margin_top">106dp</dimen>
     <dimen name="library_placeholder_text_margin_top">16dp</dimen>
     <dimen name="library_new_playlist_margin_top">24dp</dimen>
     <dimen name="library_new_playlist_margin_bottom">0dp</dimen>

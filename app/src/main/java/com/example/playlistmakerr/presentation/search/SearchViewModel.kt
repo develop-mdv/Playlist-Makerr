@@ -27,6 +27,7 @@ class SearchViewModel(
     private var lastQuery: String = ""
     private var searchDebounceJob: Job? = null
     private var searchJob: Job? = null
+    private var historyJob: Job? = null
 
     fun searchDebounce(query: String) {
         lastQuery = query
@@ -64,11 +65,14 @@ class SearchViewModel(
 
     fun showHistory(hasFocus: Boolean, text: CharSequence?) {
         if (hasFocus && text.isNullOrEmpty()) {
-            val history = searchHistoryInteractor.getHistory()
-            if (history.isNotEmpty()) {
-                _screenState.value = SearchScreenState.History(history)
-            } else {
-                _screenState.value = SearchScreenState.Empty
+            historyJob?.cancel()
+            historyJob = viewModelScope.launch {
+                val history = searchHistoryInteractor.getHistory()
+                if (history.isNotEmpty()) {
+                    _screenState.value = SearchScreenState.History(history)
+                } else {
+                    _screenState.value = SearchScreenState.Empty
+                }
             }
         } else if (text.isNullOrEmpty()) {
             _screenState.value = SearchScreenState.Empty
@@ -100,5 +104,6 @@ class SearchViewModel(
         super.onCleared()
         searchDebounceJob?.cancel()
         searchJob?.cancel()
+        historyJob?.cancel()
     }
 }

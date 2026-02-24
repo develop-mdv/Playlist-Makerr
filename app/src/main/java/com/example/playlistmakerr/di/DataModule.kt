@@ -2,6 +2,8 @@ package com.example.playlistmakerr.di
 
 import android.content.Context
 import android.media.MediaPlayer
+import androidx.room.Room
+import com.example.playlistmakerr.data.db.AppDatabase
 import com.example.playlistmakerr.data.network.ItunesApi
 import com.example.playlistmakerr.data.network.NetworkClient
 import com.example.playlistmakerr.data.network.RetrofitNetworkClient
@@ -13,6 +15,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 val dataModule = module {
+
+    single<AppDatabase> {
+        Room.databaseBuilder(
+            androidContext(),
+            AppDatabase::class.java,
+            "playlist_maker.db"
+        ).build()
+    }
 
     single<ItunesApi> {
         Retrofit.Builder()

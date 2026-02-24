@@ -19,7 +19,11 @@
         android:id="@+id/libraryFragment"
         android:name="com.example.playlistmakerr.presentation.library.LibraryFragment"
         android:label="@string/library"
-        tools:layout="@layout/fragment_library" />
+        tools:layout="@layout/fragment_library">
+        <action
+            android:id="@+id/action_libraryFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/settingsFragment"

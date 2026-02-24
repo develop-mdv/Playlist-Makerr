@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmakerr.domain.api.FavoritesInteractor
+import com.example.playlistmakerr.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -12,7 +14,10 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerViewModel(private val mediaPlayer: MediaPlayer) : ViewModel() {
+class PlayerViewModel(
+    private val mediaPlayer: MediaPlayer,
+    private val favoritesInteractor: FavoritesInteractor,
+) : ViewModel() {
 
     companion object {
         private const val PLAYBACK_UPDATE_DELAY = 300L
@@ -21,6 +26,10 @@ class PlayerViewModel(private val mediaPlayer: MediaPlayer) : ViewModel() {
     private val _playerState = MutableLiveData<PlayerScreenState>(PlayerScreenState.Default)
     val playerState: LiveData<PlayerScreenState> = _playerState
 
+    private val _isFavorite = MutableLiveData(false)
+    val isFavorite: LiveData<Boolean> = _isFavorite
+
+    private var currentTrack: Track? = null
     private var isPrepared = false
     private var updateTimeJob: Job? = null
     private val timeFormatter = SimpleDateFormat("mm:ss", Locale.getDefault())
@@ -40,6 +49,28 @@ class PlayerViewModel(private val mediaPlayer: MediaPlayer) : ViewModel() {
                 updateTimeJob?.cancel()
                 _playerState.value = PlayerScreenState.Prepared
             }
+        }
+    }
+
+    fun setTrack(track: Track) {
+        currentTrack = track
+        viewModelScope.launch {
+            val isTrackFavorite = favoritesInteractor.isFavorite(track.trackId)
+            track.isFavorite = isTrackFavorite
+            _isFavorite.value = isTrackFavorite
+        }
+    }
+
+    fun onFavoriteClicked() {
+        val track = currentTrack ?: return
+        viewModelScope.launch {
+            if (track.isFavorite) {
+                favoritesInteractor.removeTrack(track)
+            } else {
+                favoritesInteractor.addTrack(track)
+            }
+            track.isFavorite = !track.isFavorite
+            _isFavorite.value = track.isFavorite
         }
     }
 
