@@ -2,8 +2,6 @@ package com.example.playlistmakerr.presentation.search
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -18,6 +16,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +24,9 @@ import com.example.playlistmakerr.R
 import com.example.playlistmakerr.domain.models.Track
 import com.example.playlistmakerr.presentation.player.PlayerFragment
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -52,8 +54,7 @@ class SearchFragment : Fragment() {
     private val historyTracks = ArrayList<Track>()
 
     private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
-    private val clickRunnable = Runnable { isClickAllowed = true }
+    private var clickDebounceJob: Job? = null
 
     companion object {
         const val SEARCH_QUERY = "SEARCH_QUERY"
@@ -160,7 +161,7 @@ class SearchFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        handler.removeCallbacks(clickRunnable)
+        clickDebounceJob?.cancel()
     }
 
     private fun render(state: SearchScreenState) {
@@ -222,8 +223,11 @@ class SearchFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.removeCallbacks(clickRunnable)
-            handler.postDelayed(clickRunnable, CLICK_DEBOUNCE_DELAY)
+            clickDebounceJob?.cancel()
+            clickDebounceJob = viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
         }
         return current
     }

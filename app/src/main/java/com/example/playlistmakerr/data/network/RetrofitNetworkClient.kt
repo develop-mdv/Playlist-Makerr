@@ -6,10 +6,10 @@ import java.io.IOException
 
 class RetrofitNetworkClient(private val itunesService: ItunesApi) : NetworkClient {
 
-    override fun doRequest(dto: Any): Response {
+    override suspend fun doRequest(dto: Any): Response {
         if (dto is TracksSearchRequest) {
             return try {
-                val response = itunesService.search(dto.expression).execute()
+                val response = itunesService.search(dto.expression)
                 val body = response.body()
                 if (body != null) {
                     body.apply { resultCode = response.code() }
