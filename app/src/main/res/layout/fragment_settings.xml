@@ -13,9 +13,7 @@
         android:minHeight="56dp"
         app:title="@string/settings_title"
         app:titleTextAppearance="@style/ToolbarTitle"
-        app:titleTextColor="@color/toolbar_title_settings_light"
-        app:navigationIcon="@drawable/ic_arrow_back"
-        app:navigationIconTint="@color/toolbar_title_settings_light" />
+        app:titleTextColor="@color/toolbar_title_settings_light" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch_dark_theme"

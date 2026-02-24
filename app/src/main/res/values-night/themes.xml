@@ -11,8 +11,9 @@
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/yp_black</item>
+        <item name="android:windowLightStatusBar">false</item>
         <!-- Background colors -->
-        <item name="android:windowBackground">@color/background_dark</item>
+        <item name="android:windowBackground">@color/yp_black</item>
         <!-- Custom color attributes -->
         <item name="toolbarTitleColor">@color/toolbar_title_dark</item>
         <item name="buttonTextColor">@color/button_text_dark</item>

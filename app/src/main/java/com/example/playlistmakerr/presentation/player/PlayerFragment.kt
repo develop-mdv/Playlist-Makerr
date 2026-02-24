@@ -2,12 +2,15 @@ package com.example.playlistmakerr.presentation.player
 
 import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -18,7 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerFragment : Fragment() {
 
     companion object {
         const val EXTRA_TRACK = "track"
@@ -29,52 +32,59 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var playButton: ImageButton
     private lateinit var playTimeText: TextView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_player)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        return inflater.inflate(R.layout.fragment_player, container, false)
+    }
 
-        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
-        toolbar.setNavigationOnClickListener { finish() }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbar)
+        toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
         val track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getSerializableExtra(EXTRA_TRACK, Track::class.java)
+            arguments?.getSerializable(EXTRA_TRACK, Track::class.java)
         } else {
             @Suppress("DEPRECATION")
-            intent.getSerializableExtra(EXTRA_TRACK) as? Track
+            arguments?.getSerializable(EXTRA_TRACK) as? Track
         }
 
         if (track == null) {
-            finish()
+            findNavController().navigateUp()
             return
         }
 
-        setupTrackInfo(track)
+        setupTrackInfo(view, track)
 
-        playButton = findViewById(R.id.playButton)
-        playTimeText = findViewById(R.id.playTime)
+        playButton = view.findViewById(R.id.playButton)
+        playTimeText = view.findViewById(R.id.playTime)
 
         playButton.setOnClickListener {
             viewModel.playbackControl()
         }
 
-        viewModel.playerState.observe(this) { state ->
+        viewModel.playerState.observe(viewLifecycleOwner) { state ->
             renderPlayerState(state)
         }
 
         viewModel.prepare(track.previewUrl)
     }
 
-    private fun setupTrackInfo(track: Track) {
-        val coverImage = findViewById<ImageView>(R.id.cover)
-        val trackNameText = findViewById<TextView>(R.id.trackName)
-        val artistNameText = findViewById<TextView>(R.id.artistName)
-        val durationValue = findViewById<TextView>(R.id.durationValue)
-        val albumValue = findViewById<TextView>(R.id.albumValue)
-        val yearValue = findViewById<TextView>(R.id.yearValue)
-        val genreValue = findViewById<TextView>(R.id.genreValue)
-        val countryValue = findViewById<TextView>(R.id.countryValue)
-        val albumGroup = findViewById<Group>(R.id.albumGroup)
-        val yearGroup = findViewById<Group>(R.id.yearGroup)
+    private fun setupTrackInfo(view: View, track: Track) {
+        val coverImage = view.findViewById<ImageView>(R.id.cover)
+        val trackNameText = view.findViewById<TextView>(R.id.trackName)
+        val artistNameText = view.findViewById<TextView>(R.id.artistName)
+        val durationValue = view.findViewById<TextView>(R.id.durationValue)
+        val albumValue = view.findViewById<TextView>(R.id.albumValue)
+        val yearValue = view.findViewById<TextView>(R.id.yearValue)
+        val genreValue = view.findViewById<TextView>(R.id.genreValue)
+        val countryValue = view.findViewById<TextView>(R.id.countryValue)
+        val albumGroup = view.findViewById<Group>(R.id.albumGroup)
+        val yearGroup = view.findViewById<Group>(R.id.yearGroup)
 
         trackNameText.text = track.trackName ?: ""
         artistNameText.text = track.artistName ?: ""
