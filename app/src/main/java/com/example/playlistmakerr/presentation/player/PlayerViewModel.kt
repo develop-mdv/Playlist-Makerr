@@ -23,11 +23,8 @@ class PlayerViewModel(
         private const val PLAYBACK_UPDATE_DELAY = 300L
     }
 
-    private val _playerState = MutableLiveData<PlayerScreenState>(PlayerScreenState.Default)
+    private val _playerState = MutableLiveData<PlayerScreenState>(PlayerScreenState.Default())
     val playerState: LiveData<PlayerScreenState> = _playerState
-
-    private val _isFavorite = MutableLiveData(false)
-    val isFavorite: LiveData<Boolean> = _isFavorite
 
     private var currentTrack: Track? = null
     private var isPrepared = false
@@ -43,11 +40,11 @@ class PlayerViewModel(
             setDataSource(url)
             prepareAsync()
             setOnPreparedListener {
-                _playerState.value = PlayerScreenState.Prepared
+                _playerState.value = PlayerScreenState.Prepared(currentFavoriteValue())
             }
             setOnCompletionListener {
                 updateTimeJob?.cancel()
-                _playerState.value = PlayerScreenState.Prepared
+                _playerState.value = PlayerScreenState.Prepared(currentFavoriteValue())
             }
         }
     }
@@ -57,7 +54,7 @@ class PlayerViewModel(
         viewModelScope.launch {
             val isTrackFavorite = favoritesInteractor.isFavorite(track.trackId)
             track.isFavorite = isTrackFavorite
-            _isFavorite.value = isTrackFavorite
+            updateFavoriteInState(isTrackFavorite)
         }
     }
 
@@ -70,7 +67,7 @@ class PlayerViewModel(
                 favoritesInteractor.addTrack(track)
             }
             track.isFavorite = !track.isFavorite
-            _isFavorite.value = track.isFavorite
+            updateFavoriteInState(track.isFavorite)
         }
     }
 
@@ -85,14 +82,14 @@ class PlayerViewModel(
     fun pause() {
         mediaPlayer.pause()
         val position = timeFormatter.format(mediaPlayer.currentPosition)
-        _playerState.value = PlayerScreenState.Paused(position)
+        _playerState.value = PlayerScreenState.Paused(position, currentFavoriteValue())
         updateTimeJob?.cancel()
     }
 
     private fun play() {
         mediaPlayer.start()
         val position = timeFormatter.format(mediaPlayer.currentPosition)
-        _playerState.value = PlayerScreenState.Playing(position)
+        _playerState.value = PlayerScreenState.Playing(position, currentFavoriteValue())
         startTrackProgressUpdates()
     }
 
@@ -103,9 +100,22 @@ class PlayerViewModel(
                 delay(PLAYBACK_UPDATE_DELAY)
                 if (mediaPlayer.isPlaying) {
                     val position = timeFormatter.format(mediaPlayer.currentPosition)
-                    _playerState.value = PlayerScreenState.Playing(position)
+                    _playerState.value = PlayerScreenState.Playing(position, currentFavoriteValue())
                 }
             }
+        }
+    }
+
+    private fun currentFavoriteValue(): Boolean {
+        return _playerState.value?.isFavorite ?: false
+    }
+
+    private fun updateFavoriteInState(isFavorite: Boolean) {
+        _playerState.value = when (val state = _playerState.value ?: PlayerScreenState.Default()) {
+            is PlayerScreenState.Default -> state.copy(isFavorite = isFavorite)
+            is PlayerScreenState.Prepared -> state.copy(isFavorite = isFavorite)
+            is PlayerScreenState.Playing -> state.copy(isFavorite = isFavorite)
+            is PlayerScreenState.Paused -> state.copy(isFavorite = isFavorite)
         }
     }
 

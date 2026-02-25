@@ -78,22 +78,6 @@ class PlayerFragment : Fragment() {
             renderPlayerState(state)
         }
 
-        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
-            if (isFavorite) {
-                favoriteButton.setImageResource(R.drawable.ic_favorite)
-                favoriteButton.imageTintList =
-                    android.content.res.ColorStateList.valueOf(
-                        ContextCompat.getColor(requireContext(), R.color.yp_red)
-                    )
-            } else {
-                favoriteButton.setImageResource(R.drawable.ic_favorite_border)
-                favoriteButton.imageTintList =
-                    android.content.res.ColorStateList.valueOf(
-                        ContextCompat.getColor(requireContext(), R.color.player_secondary_icon_tint)
-                    )
-            }
-        }
-
         viewModel.setTrack(track)
         viewModel.prepare(track.previewUrl)
     }
@@ -144,6 +128,7 @@ class PlayerFragment : Fragment() {
     }
 
     private fun renderPlayerState(state: PlayerScreenState) {
+        renderFavoriteState(state.isFavorite)
         when (state) {
             is PlayerScreenState.Default -> {
                 playButton.setImageResource(R.drawable.ic_play_arrow)
@@ -161,6 +146,22 @@ class PlayerFragment : Fragment() {
                 playButton.setImageResource(R.drawable.ic_play_arrow)
                 playTimeText.text = state.currentPosition
             }
+        }
+    }
+
+    private fun renderFavoriteState(isFavorite: Boolean) {
+        if (isFavorite) {
+            favoriteButton.setImageResource(R.drawable.ic_favorite)
+            favoriteButton.imageTintList =
+                android.content.res.ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.yp_red)
+                )
+        } else {
+            favoriteButton.setImageResource(R.drawable.ic_favorite_border)
+            favoriteButton.imageTintList =
+                android.content.res.ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.player_secondary_icon_tint)
+                )
         }
     }
 
