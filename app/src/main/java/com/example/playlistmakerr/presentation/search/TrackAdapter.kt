@@ -16,7 +16,8 @@ import java.util.Locale
 
 class TrackAdapter(
     private val tracks: List<Track>,
-    private val onItemClick: ((Track) -> Unit)? = null
+    private val onItemClick: ((Track) -> Unit)? = null,
+    private val onLongClick: ((Track) -> Unit)? = null,
 ) : RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
@@ -29,6 +30,10 @@ class TrackAdapter(
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(tracks[position])
+        }
+        holder.itemView.setOnLongClickListener {
+            onLongClick?.invoke(tracks[position])
+            true
         }
     }
 
