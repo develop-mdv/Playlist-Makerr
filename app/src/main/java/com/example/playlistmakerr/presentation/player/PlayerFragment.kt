@@ -7,17 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.constraintlayout.widget.Group
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmakerr.R
 import com.example.playlistmakerr.domain.models.Track
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.button.MaterialButton
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -32,7 +38,15 @@ class PlayerFragment : Fragment() {
 
     private lateinit var playButton: ImageButton
     private lateinit var favoriteButton: ImageButton
+    private lateinit var addToPlaylistButton: ImageButton
     private lateinit var playTimeText: TextView
+
+    private lateinit var overlay: View
+    private lateinit var bottomSheetContainer: LinearLayout
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private lateinit var playlistsRecyclerView: RecyclerView
+    private lateinit var newPlaylistButtonBs: MaterialButton
+    private lateinit var playlistAdapter: PlaylistBottomSheetAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,7 +78,10 @@ class PlayerFragment : Fragment() {
 
         playButton = view.findViewById(R.id.playButton)
         favoriteButton = view.findViewById(R.id.favoriteButton)
+        addToPlaylistButton = view.findViewById(R.id.addToPlaylistButton)
         playTimeText = view.findViewById(R.id.playTime)
+
+        setupBottomSheet(view)
 
         playButton.setOnClickListener {
             viewModel.playbackControl()
@@ -74,12 +91,83 @@ class PlayerFragment : Fragment() {
             viewModel.onFavoriteClicked()
         }
 
+        addToPlaylistButton.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            viewModel.loadPlaylists()
+        }
+
+        newPlaylistButtonBs.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            findNavController().navigate(R.id.action_playerFragment_to_createPlaylistFragment)
+        }
+
         viewModel.playerState.observe(viewLifecycleOwner) { state ->
             renderPlayerState(state)
         }
 
+        viewModel.playlists.observe(viewLifecycleOwner) { playlists ->
+            playlistAdapter.updatePlaylists(playlists)
+        }
+
+        viewModel.addTrackToPlaylistResult.observe(viewLifecycleOwner) { result ->
+            if (result == null) return@observe
+            when (result) {
+                is AddTrackToPlaylistResult.Added -> {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.track_added_to_playlist, result.playlistName),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                is AddTrackToPlaylistResult.AlreadyExists -> {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.track_already_in_playlist, result.playlistName),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            viewModel.clearAddTrackResult()
+        }
+
         viewModel.setTrack(track)
         viewModel.prepare(track.previewUrl)
+    }
+
+    private fun setupBottomSheet(view: View) {
+        overlay = view.findViewById(R.id.overlay)
+        bottomSheetContainer = view.findViewById(R.id.playlistsBottomSheet)
+        playlistsRecyclerView = view.findViewById(R.id.playlistsRecyclerViewBs)
+        newPlaylistButtonBs = view.findViewById(R.id.newPlaylistButtonBs)
+
+        playlistAdapter = PlaylistBottomSheetAdapter { playlist ->
+            viewModel.addTrackToPlaylist(playlist)
+        }
+        playlistsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        playlistsRecyclerView.adapter = playlistAdapter
+
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        overlay.visibility = View.GONE
+                    }
+                    else -> {
+                        overlay.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                overlay.alpha = (slideOffset + 1f) / 2f
+            }
+        })
     }
 
     private fun setupTrackInfo(view: View, track: Track) {

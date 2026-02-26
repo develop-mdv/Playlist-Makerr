@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmakerr.domain.api.FavoritesInteractor
+import com.example.playlistmakerr.domain.api.PlaylistInteractor
+import com.example.playlistmakerr.domain.models.Playlist
 import com.example.playlistmakerr.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -17,6 +19,7 @@ import java.util.Locale
 class PlayerViewModel(
     private val mediaPlayer: MediaPlayer,
     private val favoritesInteractor: FavoritesInteractor,
+    private val playlistInteractor: PlaylistInteractor,
 ) : ViewModel() {
 
     companion object {
@@ -25,6 +28,12 @@ class PlayerViewModel(
 
     private val _playerState = MutableLiveData<PlayerScreenState>(PlayerScreenState.Default())
     val playerState: LiveData<PlayerScreenState> = _playerState
+
+    private val _playlists = MutableLiveData<List<Playlist>>(emptyList())
+    val playlists: LiveData<List<Playlist>> = _playlists
+
+    private val _addTrackToPlaylistResult = MutableLiveData<AddTrackToPlaylistResult?>()
+    val addTrackToPlaylistResult: LiveData<AddTrackToPlaylistResult?> = _addTrackToPlaylistResult
 
     private var currentTrack: Track? = null
     private var isPrepared = false
@@ -106,6 +115,33 @@ class PlayerViewModel(
         }
     }
 
+    fun loadPlaylists() {
+        viewModelScope.launch {
+            playlistInteractor.getPlaylists().collect { list ->
+                _playlists.postValue(list)
+            }
+        }
+    }
+
+    fun addTrackToPlaylist(playlist: Playlist) {
+        val track = currentTrack ?: return
+        if (playlist.trackIds.contains(track.trackId)) {
+            _addTrackToPlaylistResult.value =
+                AddTrackToPlaylistResult.AlreadyExists(playlist.name)
+        } else {
+            viewModelScope.launch {
+                playlistInteractor.addTrackToPlaylist(track, playlist)
+                _addTrackToPlaylistResult.postValue(
+                    AddTrackToPlaylistResult.Added(playlist.name)
+                )
+            }
+        }
+    }
+
+    fun clearAddTrackResult() {
+        _addTrackToPlaylistResult.value = null
+    }
+
     private fun currentFavoriteValue(): Boolean {
         return _playerState.value?.isFavorite ?: false
     }
@@ -124,4 +160,9 @@ class PlayerViewModel(
         updateTimeJob?.cancel()
         mediaPlayer.release()
     }
+}
+
+sealed class AddTrackToPlaylistResult {
+    data class Added(val playlistName: String) : AddTrackToPlaylistResult()
+    data class AlreadyExists(val playlistName: String) : AddTrackToPlaylistResult()
 }
