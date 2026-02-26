@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.constraintlayout.widget.Group
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -30,6 +31,7 @@ class PlayerFragment : Fragment() {
     private val viewModel by viewModel<PlayerViewModel>()
 
     private lateinit var playButton: ImageButton
+    private lateinit var favoriteButton: ImageButton
     private lateinit var playTimeText: TextView
 
     override fun onCreateView(
@@ -61,16 +63,22 @@ class PlayerFragment : Fragment() {
         setupTrackInfo(view, track)
 
         playButton = view.findViewById(R.id.playButton)
+        favoriteButton = view.findViewById(R.id.favoriteButton)
         playTimeText = view.findViewById(R.id.playTime)
 
         playButton.setOnClickListener {
             viewModel.playbackControl()
         }
 
+        favoriteButton.setOnClickListener {
+            viewModel.onFavoriteClicked()
+        }
+
         viewModel.playerState.observe(viewLifecycleOwner) { state ->
             renderPlayerState(state)
         }
 
+        viewModel.setTrack(track)
         viewModel.prepare(track.previewUrl)
     }
 
@@ -120,6 +128,7 @@ class PlayerFragment : Fragment() {
     }
 
     private fun renderPlayerState(state: PlayerScreenState) {
+        renderFavoriteState(state.isFavorite)
         when (state) {
             is PlayerScreenState.Default -> {
                 playButton.setImageResource(R.drawable.ic_play_arrow)
@@ -137,6 +146,22 @@ class PlayerFragment : Fragment() {
                 playButton.setImageResource(R.drawable.ic_play_arrow)
                 playTimeText.text = state.currentPosition
             }
+        }
+    }
+
+    private fun renderFavoriteState(isFavorite: Boolean) {
+        if (isFavorite) {
+            favoriteButton.setImageResource(R.drawable.ic_favorite)
+            favoriteButton.imageTintList =
+                android.content.res.ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.yp_red)
+                )
+        } else {
+            favoriteButton.setImageResource(R.drawable.ic_favorite_border)
+            favoriteButton.imageTintList =
+                android.content.res.ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.player_secondary_icon_tint)
+                )
         }
     }
 

@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmakerr.domain.api.FavoritesInteractor
+import com.example.playlistmakerr.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -12,15 +14,19 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerViewModel(private val mediaPlayer: MediaPlayer) : ViewModel() {
+class PlayerViewModel(
+    private val mediaPlayer: MediaPlayer,
+    private val favoritesInteractor: FavoritesInteractor,
+) : ViewModel() {
 
     companion object {
         private const val PLAYBACK_UPDATE_DELAY = 300L
     }
 
-    private val _playerState = MutableLiveData<PlayerScreenState>(PlayerScreenState.Default)
+    private val _playerState = MutableLiveData<PlayerScreenState>(PlayerScreenState.Default())
     val playerState: LiveData<PlayerScreenState> = _playerState
 
+    private var currentTrack: Track? = null
     private var isPrepared = false
     private var updateTimeJob: Job? = null
     private val timeFormatter = SimpleDateFormat("mm:ss", Locale.getDefault())
@@ -34,12 +40,34 @@ class PlayerViewModel(private val mediaPlayer: MediaPlayer) : ViewModel() {
             setDataSource(url)
             prepareAsync()
             setOnPreparedListener {
-                _playerState.value = PlayerScreenState.Prepared
+                _playerState.value = PlayerScreenState.Prepared(currentFavoriteValue())
             }
             setOnCompletionListener {
                 updateTimeJob?.cancel()
-                _playerState.value = PlayerScreenState.Prepared
+                _playerState.value = PlayerScreenState.Prepared(currentFavoriteValue())
             }
+        }
+    }
+
+    fun setTrack(track: Track) {
+        currentTrack = track
+        viewModelScope.launch {
+            val isTrackFavorite = favoritesInteractor.isFavorite(track.trackId)
+            track.isFavorite = isTrackFavorite
+            updateFavoriteInState(isTrackFavorite)
+        }
+    }
+
+    fun onFavoriteClicked() {
+        val track = currentTrack ?: return
+        viewModelScope.launch {
+            if (track.isFavorite) {
+                favoritesInteractor.removeTrack(track)
+            } else {
+                favoritesInteractor.addTrack(track)
+            }
+            track.isFavorite = !track.isFavorite
+            updateFavoriteInState(track.isFavorite)
         }
     }
 
@@ -54,14 +82,14 @@ class PlayerViewModel(private val mediaPlayer: MediaPlayer) : ViewModel() {
     fun pause() {
         mediaPlayer.pause()
         val position = timeFormatter.format(mediaPlayer.currentPosition)
-        _playerState.value = PlayerScreenState.Paused(position)
+        _playerState.value = PlayerScreenState.Paused(position, currentFavoriteValue())
         updateTimeJob?.cancel()
     }
 
     private fun play() {
         mediaPlayer.start()
         val position = timeFormatter.format(mediaPlayer.currentPosition)
-        _playerState.value = PlayerScreenState.Playing(position)
+        _playerState.value = PlayerScreenState.Playing(position, currentFavoriteValue())
         startTrackProgressUpdates()
     }
 
@@ -72,9 +100,22 @@ class PlayerViewModel(private val mediaPlayer: MediaPlayer) : ViewModel() {
                 delay(PLAYBACK_UPDATE_DELAY)
                 if (mediaPlayer.isPlaying) {
                     val position = timeFormatter.format(mediaPlayer.currentPosition)
-                    _playerState.value = PlayerScreenState.Playing(position)
+                    _playerState.value = PlayerScreenState.Playing(position, currentFavoriteValue())
                 }
             }
+        }
+    }
+
+    private fun currentFavoriteValue(): Boolean {
+        return _playerState.value?.isFavorite ?: false
+    }
+
+    private fun updateFavoriteInState(isFavorite: Boolean) {
+        _playerState.value = when (val state = _playerState.value ?: PlayerScreenState.Default()) {
+            is PlayerScreenState.Default -> state.copy(isFavorite = isFavorite)
+            is PlayerScreenState.Prepared -> state.copy(isFavorite = isFavorite)
+            is PlayerScreenState.Playing -> state.copy(isFavorite = isFavorite)
+            is PlayerScreenState.Paused -> state.copy(isFavorite = isFavorite)
         }
     }
 

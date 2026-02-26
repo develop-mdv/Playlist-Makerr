@@ -1,6 +1,7 @@
 package com.example.playlistmakerr.data.repository
 
 import android.content.SharedPreferences
+import com.example.playlistmakerr.data.db.AppDatabase
 import com.example.playlistmakerr.data.dto.TrackDto
 import com.example.playlistmakerr.domain.api.SearchHistoryRepository
 import com.example.playlistmakerr.domain.models.Track
@@ -9,14 +10,18 @@ import com.google.gson.reflect.TypeToken
 
 class SearchHistoryRepositoryImpl(
     private val sharedPreferences: SharedPreferences,
-    private val gson: Gson
+    private val gson: Gson,
+    private val appDatabase: AppDatabase,
 ) : SearchHistoryRepository {
 
-    override fun getHistory(): List<Track> {
+    override suspend fun getHistory(): List<Track> {
         val json = sharedPreferences.getString(SEARCH_HISTORY_KEY, null) ?: return emptyList()
         val type = object : TypeToken<ArrayList<TrackDto>>() {}.type
         val dtoList: ArrayList<TrackDto> = gson.fromJson(json, type) ?: return emptyList()
-        return dtoList.map { it.toDomain() }
+        val favoriteIds = appDatabase.favoriteTrackDao().getTrackIds().toSet()
+        return dtoList.map { dto ->
+            dto.toDomain().apply { isFavorite = favoriteIds.contains(trackId) }
+        }
     }
 
     override fun addTrack(track: Track) {

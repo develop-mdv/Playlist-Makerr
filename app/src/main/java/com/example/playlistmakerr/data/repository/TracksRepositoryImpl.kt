@@ -1,5 +1,6 @@
 package com.example.playlistmakerr.data.repository
 
+import com.example.playlistmakerr.data.db.AppDatabase
 import com.example.playlistmakerr.data.dto.TracksSearchRequest
 import com.example.playlistmakerr.data.dto.TracksSearchResponse
 import com.example.playlistmakerr.data.network.NetworkClient
@@ -9,7 +10,10 @@ import com.example.playlistmakerr.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
+class TracksRepositoryImpl(
+    private val networkClient: NetworkClient,
+    private val appDatabase: AppDatabase,
+) : TracksRepository {
 
     override fun searchTracks(expression: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TracksSearchRequest(expression))
@@ -18,6 +22,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                 -1 -> Resource.Error("Проблемы со связью")
                 200 -> {
                     val results = (response as TracksSearchResponse).results
+                    val favoriteIds = appDatabase.favoriteTrackDao().getTrackIds()
                     Resource.Success(results.map { dto ->
                         Track(
                             trackId = dto.trackId,
@@ -29,7 +34,8 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                             releaseDate = dto.releaseDate,
                             primaryGenreName = dto.primaryGenreName,
                             country = dto.country,
-                            previewUrl = dto.previewUrl
+                            previewUrl = dto.previewUrl,
+                            isFavorite = favoriteIds.contains(dto.trackId),
                         )
                     })
                 }
