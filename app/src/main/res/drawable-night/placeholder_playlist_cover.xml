@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#2C2C35" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+    <item
+        android:gravity="center"
+        android:width="104dp"
+        android:height="103dp"
+        android:drawable="@drawable/ic_playlist_placeholder_art" />
+</layer-list>

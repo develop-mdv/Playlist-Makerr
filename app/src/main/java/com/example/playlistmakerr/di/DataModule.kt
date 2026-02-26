@@ -3,6 +3,8 @@ package com.example.playlistmakerr.di
 import android.content.Context
 import android.media.MediaPlayer
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.playlistmakerr.data.db.AppDatabase
 import com.example.playlistmakerr.data.network.ItunesApi
 import com.example.playlistmakerr.data.network.NetworkClient
@@ -14,6 +16,35 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            """CREATE TABLE IF NOT EXISTS playlists (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                name TEXT NOT NULL,
+                description TEXT NOT NULL,
+                coverImagePath TEXT,
+                trackIds TEXT NOT NULL,
+                trackCount INTEGER NOT NULL DEFAULT 0
+            )"""
+        )
+        db.execSQL(
+            """CREATE TABLE IF NOT EXISTS playlist_tracks (
+                trackId INTEGER PRIMARY KEY NOT NULL,
+                trackName TEXT,
+                artistName TEXT,
+                trackTimeMillis INTEGER,
+                artworkUrl100 TEXT,
+                collectionName TEXT,
+                releaseDate TEXT,
+                primaryGenreName TEXT,
+                country TEXT,
+                previewUrl TEXT
+            )"""
+        )
+    }
+}
+
 val dataModule = module {
 
     single<AppDatabase> {
@@ -21,7 +52,9 @@ val dataModule = module {
             androidContext(),
             AppDatabase::class.java,
             "playlist_maker.db"
-        ).build()
+        )
+            .addMigrations(MIGRATION_1_2)
+            .build()
     }
 
     single<ItunesApi> {

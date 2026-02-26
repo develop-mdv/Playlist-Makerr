@@ -71,4 +71,21 @@
     <color name="new_playlist_button_text_light">@color/white</color>
     <!-- Bottom Navigation -->
     <color name="bottom_nav_inactive">@color/yp_black</color>
+    <!-- Create Playlist -->
+    <color name="create_playlist_bg">@color/white</color>
+    <color name="create_playlist_text">@color/yp_black</color>
+    <color name="create_playlist_hint">@color/yp_text_gray</color>
+    <color name="create_playlist_input_stroke">@color/yp_text_gray</color>
+    <color name="create_playlist_input_stroke_active">@color/yp_blue</color>
+    <color name="create_playlist_button_active">@color/yp_blue</color>
+    <color name="create_playlist_button_inactive">@color/yp_text_gray</color>
+    <color name="create_playlist_button_text_active">@color/white</color>
+    <color name="create_playlist_button_text_inactive">@color/yp_text_gray</color>
+    <color name="create_playlist_cover_bg">#E6E8EB</color>
+    <!-- Playlist Item -->
+    <color name="playlist_item_name_text">@color/yp_black</color>
+    <color name="playlist_item_count_text">@color/yp_black</color>
+    <!-- Bottom Sheet -->
+    <color name="bottom_sheet_bg">@color/white</color>
+    <color name="bottom_sheet_handle">@color/yp_light_gray</color>
 </resources>
