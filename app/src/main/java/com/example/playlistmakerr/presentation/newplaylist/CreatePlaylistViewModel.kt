@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 
-class CreatePlaylistViewModel(
+open class CreatePlaylistViewModel(
     application: Application,
     private val playlistInteractor: PlaylistInteractor,
 ) : AndroidViewModel(application) {
@@ -24,7 +24,7 @@ class CreatePlaylistViewModel(
     fun createPlaylist(name: String, description: String, onComplete: () -> Unit) {
         viewModelScope.launch {
             if (coverImageUri != null) {
-                savedCoverPath = saveImageToPrivateStorage(coverImageUri!!)
+                savedCoverPath = saveImageToStorage(coverImageUri!!)
             }
 
             val playlist = Playlist(
@@ -37,7 +37,7 @@ class CreatePlaylistViewModel(
         }
     }
 
-    private fun saveImageToPrivateStorage(uri: Uri): String? {
+    protected fun saveImageToStorage(uri: Uri): String? {
         val context = getApplication<Application>()
         val filePath = File(
             context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
