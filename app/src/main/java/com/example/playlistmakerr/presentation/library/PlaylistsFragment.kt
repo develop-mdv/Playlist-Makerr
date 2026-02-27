@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmakerr.R
+import com.example.playlistmakerr.presentation.playlist.PlaylistDetailFragment
 import com.google.android.material.button.MaterialButton
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -23,7 +25,12 @@ class PlaylistsFragment : Fragment() {
     private lateinit var placeholderImage: ImageView
     private lateinit var placeholderText: TextView
 
-    private val adapter = PlaylistGridAdapter()
+    private val adapter = PlaylistGridAdapter(onItemClick = { playlist ->
+        findNavController().navigate(
+            R.id.action_libraryFragment_to_playlistDetailFragment,
+            bundleOf(PlaylistDetailFragment.EXTRA_PLAYLIST_ID to playlist.id)
+        )
+    })
 
     override fun onCreateView(
         inflater: LayoutInflater,

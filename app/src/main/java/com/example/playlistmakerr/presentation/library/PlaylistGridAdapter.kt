@@ -15,6 +15,7 @@ import com.example.playlistmakerr.presentation.util.TrackCountFormatter
 
 class PlaylistGridAdapter(
     private val playlists: MutableList<Playlist> = mutableListOf(),
+    private val onItemClick: ((Playlist) -> Unit)? = null,
 ) : RecyclerView.Adapter<PlaylistGridAdapter.PlaylistGridViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistGridViewHolder {
@@ -25,6 +26,9 @@ class PlaylistGridAdapter(
 
     override fun onBindViewHolder(holder: PlaylistGridViewHolder, position: Int) {
         holder.bind(playlists[position])
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(playlists[position])
+        }
     }
 
     override fun getItemCount(): Int = playlists.size

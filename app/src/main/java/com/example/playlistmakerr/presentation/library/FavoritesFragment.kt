@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -73,9 +74,7 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun openPlayer(track: Track) {
-        val bundle = Bundle().apply {
-            putSerializable(PlayerFragment.EXTRA_TRACK, track)
-        }
+        val bundle = bundleOf(PlayerFragment.EXTRA_TRACK to track)
         findNavController().navigate(R.id.action_libraryFragment_to_playerFragment, bundle)
     }
 

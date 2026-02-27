@@ -28,7 +28,8 @@ class MainActivity : AppCompatActivity() {
                     bottomNavigationView.visibility = View.VISIBLE
                     divider.visibility = View.VISIBLE
                 }
-                R.id.playerFragment, R.id.createPlaylistFragment -> {
+                R.id.playerFragment, R.id.createPlaylistFragment,
+                R.id.playlistDetailFragment, R.id.editPlaylistFragment -> {
                     bottomNavigationView.visibility = View.GONE
                     divider.visibility = View.GONE
                 }

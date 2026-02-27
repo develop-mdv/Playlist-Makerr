@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 
-class CreatePlaylistViewModel(
+open class CreatePlaylistViewModel(
     application: Application,
     private val playlistInteractor: PlaylistInteractor,
 ) : AndroidViewModel(application) {
@@ -35,6 +35,10 @@ class CreatePlaylistViewModel(
             playlistInteractor.createPlaylist(playlist)
             onComplete()
         }
+    }
+
+    fun saveImageToPrivateStoragePublic(uri: Uri): String? {
+        return saveImageToPrivateStorage(uri)
     }
 
     private fun saveImageToPrivateStorage(uri: Uri): String? {

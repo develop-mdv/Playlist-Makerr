@@ -9,6 +9,8 @@ import com.example.playlistmakerr.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class PlaylistRepositoryImpl(
@@ -41,6 +43,49 @@ class PlaylistRepositoryImpl(
         appDatabase.playlistDao().updatePlaylist(updatedPlaylist.toEntity())
     }
 
+    override suspend fun getPlaylistById(playlistId: Long): Playlist? {
+        return appDatabase.playlistDao().getPlaylistById(playlistId)?.toDomain()
+    }
+
+    override fun getTracksByIds(trackIds: List<Long>): Flow<List<Track>> = flow {
+        val allTracks = appDatabase.playlistTrackDao().getAllTracks()
+        val trackMap = allTracks.associateBy { it.trackId }
+        val result = trackIds.reversed().mapNotNull { id ->
+            trackMap[id]?.toDomain()
+        }
+        emit(result)
+    }
+
+    override suspend fun removeTrackFromPlaylist(trackId: Long, playlist: Playlist) {
+        val updatedTrackIds = playlist.trackIds.filter { it != trackId }
+        val updatedPlaylist = playlist.copy(
+            trackIds = updatedTrackIds,
+            trackCount = updatedTrackIds.size,
+        )
+        appDatabase.playlistDao().updatePlaylist(updatedPlaylist.toEntity())
+        removeOrphanTrack(trackId)
+    }
+
+    override suspend fun deletePlaylist(playlist: Playlist) {
+        appDatabase.playlistDao().deletePlaylistById(playlist.id)
+        playlist.trackIds.forEach { trackId ->
+            removeOrphanTrack(trackId)
+        }
+    }
+
+    private suspend fun removeOrphanTrack(trackId: Long) {
+        val playlists = appDatabase.playlistDao().getPlaylists().first()
+        val isUsed = playlists.any { entity ->
+            val type = object : TypeToken<List<Long>>() {}.type
+            val ids: List<Long> = if (entity.trackIds.isBlank()) emptyList()
+            else gson.fromJson(entity.trackIds, type)
+            ids.contains(trackId)
+        }
+        if (!isUsed) {
+            appDatabase.playlistTrackDao().deleteTrackById(trackId)
+        }
+    }
+
     private fun Playlist.toEntity(): PlaylistEntity = PlaylistEntity(
         id = id,
         name = name,
@@ -62,6 +107,19 @@ class PlaylistRepositoryImpl(
             trackCount = trackCount,
         )
     }
+
+    private fun PlaylistTrackEntity.toDomain(): Track = Track(
+        trackId = trackId,
+        trackName = trackName,
+        artistName = artistName,
+        trackTimeMillis = trackTimeMillis,
+        artworkUrl100 = artworkUrl100,
+        collectionName = collectionName,
+        releaseDate = releaseDate,
+        primaryGenreName = primaryGenreName,
+        country = country,
+        previewUrl = previewUrl,
+    )
 
     private fun Track.toPlaylistTrackEntity(): PlaylistTrackEntity = PlaylistTrackEntity(
         trackId = trackId,

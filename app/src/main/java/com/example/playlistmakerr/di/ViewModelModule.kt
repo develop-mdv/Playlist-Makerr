@@ -3,7 +3,9 @@ package com.example.playlistmakerr.di
 import com.example.playlistmakerr.presentation.library.FavoritesViewModel
 import com.example.playlistmakerr.presentation.library.PlaylistsViewModel
 import com.example.playlistmakerr.presentation.newplaylist.CreatePlaylistViewModel
+import com.example.playlistmakerr.presentation.newplaylist.EditPlaylistViewModel
 import com.example.playlistmakerr.presentation.player.PlayerViewModel
+import com.example.playlistmakerr.presentation.playlist.PlaylistDetailViewModel
 import com.example.playlistmakerr.presentation.search.SearchViewModel
 import com.example.playlistmakerr.presentation.settings.SettingsViewModel
 import org.koin.android.ext.koin.androidApplication
@@ -34,5 +36,13 @@ val viewModelModule = module {
 
     viewModel {
         CreatePlaylistViewModel(androidApplication(), get())
+    }
+
+    viewModel {
+        PlaylistDetailViewModel(androidApplication(), get())
+    }
+
+    viewModel {
+        EditPlaylistViewModel(androidApplication(), get())
     }
 }

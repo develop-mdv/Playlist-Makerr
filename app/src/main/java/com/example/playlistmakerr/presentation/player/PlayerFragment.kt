@@ -1,6 +1,5 @@
 package com.example.playlistmakerr.presentation.player
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.os.BundleCompat
 import androidx.constraintlayout.widget.Group
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -62,12 +62,7 @@ class PlayerFragment : Fragment() {
         val toolbar = view.findViewById<MaterialToolbar>(R.id.toolbar)
         toolbar.setNavigationOnClickListener { findNavController().navigateUp() }
 
-        val track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getSerializable(EXTRA_TRACK, Track::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            arguments?.getSerializable(EXTRA_TRACK) as? Track
-        }
+        val track = arguments?.let { BundleCompat.getParcelable(it, EXTRA_TRACK, Track::class.java) }
 
         if (track == null) {
             findNavController().navigateUp()

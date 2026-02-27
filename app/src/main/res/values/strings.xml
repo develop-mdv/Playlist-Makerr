@@ -54,4 +54,21 @@
     <string name="tracks_count_few">%d трека</string>
     <string name="tracks_count_many">%d треков</string>
     <string name="add_to_playlist_title">Добавить в плейлист</string>
+    <!-- Playlist Detail -->
+    <string name="minutes_count_one">%d минута</string>
+    <string name="minutes_count_few">%d минуты</string>
+    <string name="minutes_count_many">%d минут</string>
+    <string name="playlist_no_tracks">В этом плейлисте нет треков</string>
+    <string name="share_playlist">Поделиться</string>
+    <string name="edit_playlist_info">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
+    <string name="delete_track_dialog_message">Хотите удалить трек?</string>
+    <string name="no">Нет</string>
+    <string name="yes">Да</string>
+    <string name="delete_playlist_dialog_title">Удалить плейлист</string>
+    <string name="delete_playlist_dialog_message">Вы уверены, что хотите удалить этот плейлист?</string>
+    <string name="no_tracks_to_share">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <!-- Edit Playlist -->
+    <string name="edit_playlist_title">Редактировать</string>
+    <string name="save_button">Сохранить</string>
 </resources>

@@ -2,7 +2,11 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("org.jetbrains.kotlin.kapt")
+    id("kotlin-parcelize")
 }
+
+val buildSessionId = System.currentTimeMillis()
+layout.buildDirectory.set(file("${rootDir}/.gradle-build/app-$buildSessionId"))
 
 android {
     namespace = "com.example.playlistmakerr"
