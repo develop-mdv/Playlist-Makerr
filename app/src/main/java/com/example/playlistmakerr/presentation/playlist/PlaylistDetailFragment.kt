@@ -278,14 +278,13 @@ class PlaylistDetailFragment : Fragment() {
     }
 
     private fun showDeletePlaylistDialog() {
-        val playlist = viewModel.playlist.value ?: return
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.delete_playlist_dialog_title))
-            .setMessage(getString(R.string.delete_playlist_dialog_message, playlist.name))
-            .setNegativeButton(getString(R.string.no)) { dialog, _ ->
+            .setMessage(getString(R.string.delete_playlist_dialog_message))
+            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
-            .setPositiveButton(getString(R.string.yes)) { _, _ ->
+            .setPositiveButton(getString(R.string.delete_playlist)) { _, _ ->
                 viewModel.deletePlaylist()
                 findNavController().navigateUp()
             }

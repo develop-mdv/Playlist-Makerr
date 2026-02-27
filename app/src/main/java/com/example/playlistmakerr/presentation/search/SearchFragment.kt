@@ -15,6 +15,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -88,8 +89,8 @@ class SearchFragment : Fragment() {
 
         trackAdapter = TrackAdapter(tracks) { track ->
             if (clickDebounce()) {
-                viewModel.addTrackToHistory(track)
                 openPlayer(track)
+                runCatching { viewModel.addTrackToHistory(track) }
             }
         }
         tracksRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -97,8 +98,8 @@ class SearchFragment : Fragment() {
 
         historyAdapter = TrackAdapter(historyTracks) { track ->
             if (clickDebounce()) {
-                viewModel.addTrackToHistory(track)
                 openPlayer(track)
+                runCatching { viewModel.addTrackToHistory(track) }
             }
         }
         historyRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -237,10 +238,15 @@ class SearchFragment : Fragment() {
     }
 
     private fun openPlayer(track: Track) {
-        val bundle = Bundle().apply {
-            putSerializable(PlayerFragment.EXTRA_TRACK, track)
+        val bundle = bundleOf(PlayerFragment.EXTRA_TRACK to track)
+        val navController = findNavController()
+        val hasAction =
+            navController.currentDestination?.getAction(R.id.action_searchFragment_to_playerFragment) != null
+        if (hasAction) {
+            navController.navigate(R.id.action_searchFragment_to_playerFragment, bundle)
+        } else {
+            navController.navigate(R.id.playerFragment, bundle)
         }
-        findNavController().navigate(R.id.action_searchFragment_to_playerFragment, bundle)
     }
 
     private fun hideKeyboard() {

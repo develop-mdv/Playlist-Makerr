@@ -66,7 +66,7 @@
     <string name="no">Нет</string>
     <string name="yes">Да</string>
     <string name="delete_playlist_dialog_title">Удалить плейлист</string>
-    <string name="delete_playlist_dialog_message">Хотите удалить плейлист «%s»?</string>
+    <string name="delete_playlist_dialog_message">Вы уверены, что хотите удалить этот плейлист?</string>
     <string name="no_tracks_to_share">В этом плейлисте нет списка треков, которым можно поделиться</string>
     <!-- Edit Playlist -->
     <string name="edit_playlist_title">Редактировать</string>

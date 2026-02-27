@@ -20,6 +20,11 @@ class TrackAdapter(
     private val onLongClick: ((Track) -> Unit)? = null,
 ) : RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
 
+    constructor(
+        tracks: List<Track>,
+        onItemClick: (Track) -> Unit
+    ) : this(tracks, onItemClick, null)
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_track, parent, false)
