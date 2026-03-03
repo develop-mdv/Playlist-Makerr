@@ -72,4 +72,5 @@
     <!-- Bottom Sheet -->
     <color name="bottom_sheet_bg">@color/yp_black</color>
     <color name="bottom_sheet_handle">@color/white</color>
+    <color name="playlist_details_background">@color/yp_black</color>
 </resources>

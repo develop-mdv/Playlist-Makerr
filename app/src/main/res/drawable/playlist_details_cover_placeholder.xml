@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/yp_light_gray" />
+        </shape>
+    </item>
+    <item
+        android:gravity="center"
+        android:width="236dp"
+        android:height="234dp"
+        android:drawable="@drawable/ic_playlist_placeholder_art" />
+</layer-list>

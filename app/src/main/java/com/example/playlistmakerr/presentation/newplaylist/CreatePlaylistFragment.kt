@@ -24,15 +24,15 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CreatePlaylistFragment : Fragment() {
+open class CreatePlaylistFragment : Fragment() {
 
-    private val viewModel by viewModel<CreatePlaylistViewModel>()
+    open val viewModel by viewModel<CreatePlaylistViewModel>()
 
-    private lateinit var coverImage: ImageView
-    private lateinit var nameEditText: TextInputEditText
-    private lateinit var descriptionEditText: TextInputEditText
-    private lateinit var createButton: Button
-    private lateinit var toolbar: MaterialToolbar
+    protected lateinit var coverImage: ImageView
+    protected lateinit var nameEditText: TextInputEditText
+    protected lateinit var descriptionEditText: TextInputEditText
+    protected lateinit var createButton: Button
+    protected lateinit var toolbar: MaterialToolbar
 
     private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -102,7 +102,7 @@ class CreatePlaylistFragment : Fragment() {
         }
     }
 
-    private fun handleBack() {
+    protected open fun handleBack() {
         val name = nameEditText.text.toString()
         val description = descriptionEditText.text.toString()
         if (viewModel.hasUnsavedData(name, description)) {
@@ -125,7 +125,7 @@ class CreatePlaylistFragment : Fragment() {
             .show()
     }
 
-    private fun showCoverImage(uri: Uri) {
+    protected fun showCoverImage(uri: Uri) {
         val cornerRadius =
             resources.getDimensionPixelSize(R.dimen.create_playlist_cover_corner_radius)
         coverImage.background = null

@@ -88,4 +88,5 @@
     <!-- Bottom Sheet -->
     <color name="bottom_sheet_bg">@color/white</color>
     <color name="bottom_sheet_handle">@color/yp_light_gray</color>
+    <color name="playlist_details_background">@color/yp_light_gray</color>
 </resources>
